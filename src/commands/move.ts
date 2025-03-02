@@ -4,20 +4,21 @@ import {TYPES} from '../types.js';
 import PlayerManager from '../managers/player.js';
 import Command from './index.js';
 import {SlashCommandBuilder} from '@discordjs/builders';
+import i18n from 'i18n';
 
 @injectable()
 export default class implements Command {
   public readonly slashCommand = new SlashCommandBuilder()
     .setName('move')
-    .setDescription('move songs within the queue')
+    .setDescription(i18n.__('commands.move.description'))
     .addIntegerOption(option =>
       option.setName('from')
-        .setDescription('position of the song to move')
+        .setDescription(i18n.__('commands.move.options.from-description'))
         .setRequired(true),
     )
     .addIntegerOption(option =>
       option.setName('to')
-        .setDescription('position to move the song to')
+        .setDescription(i18n.__('commands.move.options.to-description'))
         .setRequired(true));
 
   private readonly playerManager: PlayerManager;
@@ -33,15 +34,15 @@ export default class implements Command {
     const to = interaction.options.getInteger('to') ?? 1;
 
     if (from < 1) {
-      throw new Error('position must be at least 1');
+      throw new Error(i18n.__('commands.move.position-error'));
     }
 
     if (to < 1) {
-      throw new Error('position must be at least 1');
+      throw new Error(i18n.__('commands.move.position-error'));
     }
 
     const {title} = player.move(from, to);
 
-    await interaction.reply('moved **' + title + '** to position **' + String(to) + '**');
+    await interaction.reply(i18n.__('commands.move.reply', {title, position: String(to)}));
   }
 }

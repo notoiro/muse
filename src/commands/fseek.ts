@@ -6,15 +6,16 @@ import PlayerManager from '../managers/player.js';
 import Command from './index.js';
 import {prettyTime} from '../utils/time.js';
 import durationStringToSeconds from '../utils/duration-string-to-seconds.js';
+import i18n from 'i18n';
 
 @injectable()
 export default class implements Command {
   public readonly slashCommand = new SlashCommandBuilder()
     .setName('fseek')
-    .setDescription('seek forward in the current song')
+    .setDescription(i18n.__('commands.fseek.description'))
     .addStringOption(option => option
       .setName('time')
-      .setDescription('an interval expression or number of seconds (1m, 30s, 100)')
+      .setDescription(i18n.__('commands.fseek.options.time-description'))
       .setRequired(true));
 
   public requiresVC = true;
@@ -31,23 +32,23 @@ export default class implements Command {
     const currentSong = player.getCurrent();
 
     if (!currentSong) {
-      throw new Error('nothing is playing');
+      throw new Error(i18n.__('commands.fseek.no-play-error'));
     }
 
     if (currentSong.isLive) {
-      throw new Error('can\'t seek in a livestream');
+      throw new Error(i18n.__('commands.fseek.live-error'));
     }
 
     const seekValue = interaction.options.getString('time');
 
     if (!seekValue) {
-      throw new Error('missing seek value');
+      throw new Error(i18n.__('commands.fseek.seek-value-error'));
     }
 
     const seekTime = durationStringToSeconds(seekValue);
 
     if (seekTime + player.getPosition() > currentSong.length) {
-      throw new Error('can\'t seek past the end of the song');
+      throw new Error(i18n.__('commands.fseek.seek-length-error'));
     }
 
     await Promise.all([
@@ -55,6 +56,6 @@ export default class implements Command {
       interaction.deferReply(),
     ]);
 
-    await interaction.editReply(`👍 seeked to ${prettyTime(player.getPosition())}`);
+    await interaction.editReply(i18n.__('commands.fseek.reply', prettyTime(player.getPosition())));
   }
 }

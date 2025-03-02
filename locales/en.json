@@ -1,0 +1,8 @@
+{
+  "commands":{
+    "clear": {
+      "description": "clears all songs in queue except currently playing song",
+      "done": "clearer than a field after a fresh harvest"
+    }
+  }
+}

@@ -5,12 +5,13 @@ import PlayerManager from '../managers/player.js';
 import Command from './index.js';
 import {SlashCommandBuilder} from '@discordjs/builders';
 import {STATUS} from '../services/player.js';
+import i18n from 'i18n';
 
 @injectable()
 export default class implements Command {
   public readonly slashCommand = new SlashCommandBuilder()
     .setName('loop-queue')
-    .setDescription('toggle looping the entire queue');
+    .setDescription(i18n.__('commands.loop-queue.description'));
 
   public requiresVC = true;
 
@@ -24,11 +25,11 @@ export default class implements Command {
     const player = this.playerManager.get(interaction.guild!.id);
 
     if (player.status === STATUS.IDLE) {
-      throw new Error('no songs to loop!');
+      throw new Error(i18n.__('commands.loop-queue.idle-error'));
     }
 
     if (player.queueSize() < 2) {
-      throw new Error('not enough songs to loop a queue!');
+      throw new Error(i18n.__('commands.loop-queue.queue-size-error'));
     }
 
     if (player.loopCurrentSong) {
@@ -37,6 +38,6 @@ export default class implements Command {
 
     player.loopCurrentQueue = !player.loopCurrentQueue;
 
-    await interaction.reply((player.loopCurrentQueue ? 'looped queue :)' : 'stopped looping queue :('));
+    await interaction.reply((player.loopCurrentQueue ? i18n.__('commands.loop-queue.reply-on') : i18n.__('commands.loop-queue.reply-off')));
   }
 }

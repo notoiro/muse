@@ -6,53 +6,54 @@ import AddQueryToQueue from '../services/add-query-to-queue.js';
 import {TYPES} from '../types.js';
 import {prisma} from '../utils/db.js';
 import {Pagination} from 'pagination.djs';
+import i18n from 'i18n';
 
 @injectable()
 export default class implements Command {
   public readonly slashCommand = new SlashCommandBuilder()
     .setName('favorites')
-    .setDescription('add a song to your favorites')
+    .setDescription(i18n.__('commands.favorites.description'))
     .addSubcommand(subcommand => subcommand
       .setName('use')
-      .setDescription('use a favorite')
+      .setDescription(i18n.__('commands.favorites.subcommands.use.description'))
       .addStringOption(option => option
         .setName('name')
-        .setDescription('name of favorite')
+        .setDescription(i18n.__('commands.favorites.subcommands.use.options.name-description'))
         .setRequired(true)
         .setAutocomplete(true))
       .addBooleanOption(option => option
         .setName('immediate')
-        .setDescription('add track to the front of the queue'))
+        .setDescription(i18n.__('common.immediate-description')))
       .addBooleanOption(option => option
         .setName('shuffle')
-        .setDescription('shuffle the input if you\'re adding multiple tracks'))
+        .setDescription(i18n.__('common.shuffle-description')))
       .addBooleanOption(option => option
         .setName('split')
-        .setDescription('if a track has chapters, split it'))
+        .setDescription(i18n.__('common.split-description')))
       .addBooleanOption(option => option
         .setName('skip')
-        .setDescription('skip the currently playing track')))
+        .setDescription(i18n.__('common.skip-description'))))
     .addSubcommand(subcommand => subcommand
       .setName('list')
-      .setDescription('list all favorites'))
+      .setDescription(i18n.__('commands.favorites.subcommands.list.description')))
     .addSubcommand(subcommand => subcommand
       .setName('create')
-      .setDescription('create a new favorite')
+      .setDescription(i18n.__('commands.favorites.subcommands.create.description'))
       .addStringOption(option => option
         .setName('name')
-        .setDescription('you\'ll type this when using this favorite')
+        .setDescription(i18n.__('commands.favorites.subcommands.create.options.name-description'))
         .setRequired(true))
       .addStringOption(option => option
         .setName('query')
-        .setDescription('any input you\'d normally give to the play command')
+        .setDescription(i18n.__('commands.favorites.subcommands.create.options.query-description'))
         .setRequired(true),
       ))
     .addSubcommand(subcommand => subcommand
       .setName('remove')
-      .setDescription('remove a favorite')
+      .setDescription(i18n.__('commands.favorites.subcommands.remove.description'))
       .addStringOption(option => option
         .setName('name')
-        .setDescription('name of favorite')
+        .setDescription(i18n.__('commands.favorites.subcommands.remove.options.name-description'))
         .setAutocomplete(true)
         .setRequired(true),
       ),
@@ -118,7 +119,7 @@ export default class implements Command {
     });
 
     if (!favorite) {
-      throw new Error('no favorite with that name exists');
+      throw new Error(i18n.__('commands.favorites.subcommands.use.error'));
     }
 
     await this.addQueryToQueue.addToQueue({
@@ -139,7 +140,7 @@ export default class implements Command {
     });
 
     if (favorites.length === 0) {
-      await interaction.reply('there aren\'t any favorites yet');
+      await interaction.reply(i18n.__('commands.favorites.subcommands.list.error'));
       return;
     }
 
@@ -171,7 +172,7 @@ export default class implements Command {
     }});
 
     if (existingFavorite) {
-      throw new Error('a favorite with that name already exists');
+      throw new Error(i18n.__('commands.favorites.subcommands.create.error'));
     }
 
     await prisma.favoriteQuery.create({
@@ -183,7 +184,7 @@ export default class implements Command {
       },
     });
 
-    await interaction.reply('👍 favorite created');
+    await interaction.reply(i18n.__('commands.favorites.subcommands.create.reply'));
   }
 
   private async remove(interaction: ChatInputCommandInteraction) {
@@ -195,17 +196,17 @@ export default class implements Command {
     }});
 
     if (!favorite) {
-      throw new Error('no favorite with that name exists');
+      throw new Error(i18n.__('commands.favorites.subcommands.remove.not-found-error'));
     }
 
     const isUserGuildOwner = interaction.member!.user.id === interaction.guild!.ownerId;
 
     if (favorite.authorId !== interaction.member!.user.id && !isUserGuildOwner) {
-      throw new Error('you can only remove your own favorites');
+      throw new Error(i18n.__('commands.favorites.subcommands.remove.permission-error'));
     }
 
     await prisma.favoriteQuery.delete({where: {id: favorite.id}});
 
-    await interaction.reply('👍 favorite removed');
+    await interaction.reply(i18n.__('commands.favorites.subcommands.remove.reply'));
   }
 }

@@ -1,0 +1,177 @@
+{
+	"common": {
+		"yes": "はい",
+		"no": "いいえ",
+		"volume-description": "音量の値（0はミュート、100は最大でデフォルト）",
+		"immediate-description": "曲をキューの先頭に追加するか",
+		"shuffle-description": "複数の曲がある場合にシャッフルするか",
+		"split-description": "チャプターがある場合に分割するか",
+		"skip-description": "現在再生中の曲をスキップするか"
+	},
+	"commands": {
+		"clear": {
+			"description": "現在のキューをひっくり返します",
+			"done": "猫がキューの瓶をひっくり返しました"
+		},
+		"config": {
+			"description": "Botの設定を変更します",
+			"subcommands": {
+				"set-playlist-limit": {
+					"description": "プレイリストからキューに追加できる曲の最大数を設定します",
+					"options": {
+						"limit-description": "曲の最大数"
+					},
+					"limit-error": "不正な値です",
+					"reply": "👍 設定を更新しました"
+				},
+				"set-wait-after-queue-empties": {
+					"description": "キューが空になってから切断するまでの待機時間を設定します",
+					"options": {
+						"delay-description": "待機秒数 (0の場合は切断しない)"
+					},
+					"reply": "👍 設定を更新しました"
+				},
+				"set-leave-if-no-listeners": {
+					"description": "聞き手がいなくなった場合に退出するかどうかを設定します",
+					"options": {
+						"value-description": "退出するか"
+					},
+					"reply": "👍 設定を更新しました"
+				},
+				"set-queue-add-response-hidden": {
+					"description": "返信をリクエストした人にだけ表示するか",
+					"options": {
+						"value-description": "退出するか"
+					},
+					"reply": "👍 設定を更新しました"
+				},
+				"set-reduce-vol-when-voice": {
+					"description": "人が話しているときに音量を下げるかを設定します",
+					"options": {
+						"value-description": "音量を下げるか"
+					},
+					"reply": "👍 設定を更新しました"
+				},
+				"set-reduce-vol-when-voice-target": {
+					"description": "人が話しているときの目標音量を設定します",
+					"reply": "👍 設定を更新しました"
+				},
+				"set-auto-announce-next-song": {
+					"description": "キューの次の曲を再生するときにテキストチャンネルにアナウンスするかを設定します",
+					"options": {
+						"value-description": "アナウンスするか"
+					},
+					"reply": "👍 設定を更新しました"
+				},
+				"set-default-volume": {
+					"description": "接続したときに適用するデフォルトの音量を設定します",
+					"reply": "👍 設定を更新しました"
+				},
+				"set-default-queue-page-size": {
+					"description": "/queueコマンドのデフォルトの表示件数を設定します",
+					"options": {
+						"page-size-description": "サイズ（1-30）"
+					},
+					"reply": "👍 設定を更新しました"
+				},
+				"get": {
+					"description": "すべての設定を表示します",
+					"show": {
+						"title": "設定",
+						"playlist-limit": "プレイリストの最大値",
+						"seconds-to-wait-after-queue-empties": {
+							"title": "キューが空になってから切断のまでの待機時間",
+							"none": "切断しない",
+							"seconds": "%s秒"
+						},
+						"leave-if-no-listeners": "聞き手がいなくなった場合に退出するか",
+						"auto-announce-next-song": "キューの次の曲をアナウンスするか",
+						"queue-add-response-ephemeral": "キュー追加の返信をリクエストした人にだけ表示するか",
+						"default-volume": "デフォルトの音量",
+						"default-queue-page-size": "デフォルトの/queueの表示件数",
+						"turn-down-volume-when-people-speak": "人が話しているときに音量を下げるか"
+					}
+				}
+			}
+		},
+		"disconnect": {
+			"description": "ポーズして切断します",
+			"error": "接続していません",
+			"reply": "さよなら"
+		},
+		"favorites": {
+			"description": "お気に入りに曲を追加します",
+			"subcommands": {
+				"use": {
+					"description": "お気に入りを使う",
+					"options": {
+						"name-description": "名前"
+					},
+					"error": "その名前のお気に入りはありません"
+				},
+				"list": {
+					"description": "お気に入りの一覧",
+					"error": "お気に入りはまだありません"
+				},
+				"create": {
+					"description": "新しいお気に入りを作る",
+					"options": {
+						"name-description": "お気に入りを使うときにこれを入力する",
+						"query-description": "/playに入力して再生できる入力"
+					},
+					"error": "その名前のお気に入りは既にあります",
+					"reply": "👍 お気に入りを作成しました"
+				},
+				"remove": {
+					"description": "お気に入りを削除する",
+					"options": {
+						"name-description": "名前"
+					},
+					"not-found-error": "その名前のお気に入りはありません",
+					"permission-error": "削除できるのは自分の作ったお気に入りだけです",
+					"reply": "👍 お気に入りを削除しました"
+				}
+			}
+		},
+    "fseek": {
+      "description": "現在の曲を早送りする",
+      "options": {
+        "time-description": "1mや30sなどの省略した時間表現、または秒数"
+      },
+      "no-play-error": "何も再生していません",
+      "live-error": "ライブでは早送りできません",
+      "seek-value-error": "時間が見つかりません",
+      "seek-length-error": "曲の終わりを超えて早送りすることはできません",
+      "reply": "👍 %sまで早送りしました"
+    },
+    "loop-queue": {
+      "description": "キュー全体のループの切り替え",
+      "idle-error": "曲を再生していません！",
+      "queue-size-error": "曲が足りません！",
+      "reply-on": "ループします‹‹\\(´ω` )/››",
+      "reply-off": "ループしません(ﾟДﾟ)"
+    },
+    "loop": {
+      "description": "1曲ループの切り替え",
+      "error": "曲を再生していません！",
+      "reply-on": "ループします‹‹\\(´ω` )/››",
+      "reply-off": "ループしません(ﾟДﾟ)"
+    },
+    "move": {
+      "description": "キュー内で曲を移動する",
+      "options": {
+        "from-description": "移動元",
+        "to-description": "移動先"
+      },
+      "position-error": "位置は1以上を指定してください",
+      "reply": "{{title}}を{{position}}番目に移動しました"
+    },
+    "next": {
+      "description": "次の曲へ"
+    },
+    "nowplaying": {
+      "description": "再生中の曲を表示",
+      "error": "何も再生されていません"
+    }
+	}
+}

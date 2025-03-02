@@ -24,6 +24,7 @@ const CONFIG_MAP = {
   BOT_ACTIVITY: process.env.BOT_ACTIVITY ?? 'music',
   ENABLE_SPONSORBLOCK: process.env.ENABLE_SPONSORBLOCK === 'true',
   SPONSORBLOCK_TIMEOUT: process.env.ENABLE_SPONSORBLOCK ?? 5,
+  LOCALE: process.env.LOCALE ?? 'ja',
 } as const;
 
 const BOT_ACTIVITY_TYPE_MAP = {
@@ -49,6 +50,7 @@ export default class Config {
   readonly BOT_ACTIVITY!: string;
   readonly ENABLE_SPONSORBLOCK!: boolean;
   readonly SPONSORBLOCK_TIMEOUT!: number;
+  readonly LOCALE!: string;
 
   constructor() {
     for (const [key, value] of Object.entries(CONFIG_MAP)) {

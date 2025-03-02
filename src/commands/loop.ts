@@ -5,12 +5,13 @@ import PlayerManager from '../managers/player.js';
 import Command from './index.js';
 import {SlashCommandBuilder} from '@discordjs/builders';
 import {STATUS} from '../services/player.js';
+import i18n from 'i18n';
 
 @injectable()
 export default class implements Command {
   public readonly slashCommand = new SlashCommandBuilder()
     .setName('loop')
-    .setDescription('toggle looping the current song');
+    .setDescription(i18n.__('commands.loop.description'));
 
   public requiresVC = true;
 
@@ -24,7 +25,7 @@ export default class implements Command {
     const player = this.playerManager.get(interaction.guild!.id);
 
     if (player.status === STATUS.IDLE) {
-      throw new Error('no song to loop!');
+      throw new Error(i18n.__('commands.loop.error'));
     }
 
     if (player.loopCurrentQueue) {
@@ -33,6 +34,6 @@ export default class implements Command {
 
     player.loopCurrentSong = !player.loopCurrentSong;
 
-    await interaction.reply((player.loopCurrentSong ? 'looped :)' : 'stopped looping :('));
+    await interaction.reply((player.loopCurrentSong ? i18n.__('commands.loop.reply-on') : i18n.__('commands.loop.reply-off')));
   }
 }
