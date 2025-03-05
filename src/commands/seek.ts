@@ -6,15 +6,16 @@ import Command from './index.js';
 import {parseTime, prettyTime} from '../utils/time.js';
 import {SlashCommandBuilder} from '@discordjs/builders';
 import durationStringToSeconds from '../utils/duration-string-to-seconds.js';
+import i18n from 'i18n';
 
 @injectable()
 export default class implements Command {
   public readonly slashCommand = new SlashCommandBuilder()
     .setName('seek')
-    .setDescription('seek to a position from beginning of song')
+    .setDescription(i18n.__('commands.seek.description'))
     .addStringOption(option =>
       option.setName('time')
-        .setDescription('an interval expression or number of seconds (1m, 30s, 100)')
+        .setDescription(i18n.__('common.time-description'))
         .setRequired(true),
     );
 
@@ -32,11 +33,11 @@ export default class implements Command {
     const currentSong = player.getCurrent();
 
     if (!currentSong) {
-      throw new Error('nothing is playing');
+      throw new Error(i18n.__('commands.seek.no-play-error'));
     }
 
     if (currentSong.isLive) {
-      throw new Error('can\'t seek in a livestream');
+      throw new Error(i18n.__('commands.seek.live-error'));
     }
 
     const time = interaction.options.getString('time')!;
@@ -50,7 +51,7 @@ export default class implements Command {
     }
 
     if (seekTime > currentSong.length) {
-      throw new Error('can\'t seek past the end of the song');
+      throw new Error(i18n.__('commands.seek.seek-length-error'));
     }
 
     await Promise.all([
@@ -58,6 +59,6 @@ export default class implements Command {
       interaction.deferReply(),
     ]);
 
-    await interaction.editReply(`👍 seeked to ${prettyTime(player.getPosition())}`);
+    await interaction.editReply(i18n.__('commands.seek.reply', prettyTime(player.getPosition())));
   }
 }

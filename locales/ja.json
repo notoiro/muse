@@ -2,11 +2,13 @@
 	"common": {
 		"yes": "はい",
 		"no": "いいえ",
+
 		"volume-description": "音量の値（0はミュート、100は最大でデフォルト）",
 		"immediate-description": "曲をキューの先頭に追加するか",
 		"shuffle-description": "複数の曲がある場合にシャッフルするか",
 		"split-description": "チャプターがある場合に分割するか",
-		"skip-description": "現在再生中の曲をスキップするか"
+		"skip-description": "現在再生中の曲をスキップするか",
+		"time-description": "1mや30sなどの省略した時間表現、または秒数"
 	},
 	"commands": {
 		"clear": {
@@ -133,45 +135,120 @@
 				}
 			}
 		},
-    "fseek": {
-      "description": "現在の曲を早送りする",
-      "options": {
-        "time-description": "1mや30sなどの省略した時間表現、または秒数"
-      },
-      "no-play-error": "何も再生していません",
-      "live-error": "ライブでは早送りできません",
-      "seek-value-error": "時間が見つかりません",
-      "seek-length-error": "曲の終わりを超えて早送りすることはできません",
-      "reply": "👍 %sまで早送りしました"
-    },
-    "loop-queue": {
-      "description": "キュー全体のループの切り替え",
-      "idle-error": "曲を再生していません！",
-      "queue-size-error": "曲が足りません！",
-      "reply-on": "ループします‹‹\\(´ω` )/››",
-      "reply-off": "ループしません(ﾟДﾟ)"
-    },
-    "loop": {
-      "description": "1曲ループの切り替え",
-      "error": "曲を再生していません！",
-      "reply-on": "ループします‹‹\\(´ω` )/››",
-      "reply-off": "ループしません(ﾟДﾟ)"
-    },
-    "move": {
-      "description": "キュー内で曲を移動する",
-      "options": {
-        "from-description": "移動元",
-        "to-description": "移動先"
-      },
-      "position-error": "位置は1以上を指定してください",
-      "reply": "{{title}}を{{position}}番目に移動しました"
-    },
-    "next": {
-      "description": "次の曲へ"
-    },
-    "nowplaying": {
-      "description": "再生中の曲を表示",
-      "error": "何も再生されていません"
-    }
+		"fseek": {
+			"description": "現在の曲を早送りする",
+			"no-play-error": "何も再生していません！",
+			"live-error": "ライブでは早送りできません",
+			"seek-value-error": "時間が見つかりません",
+			"seek-length-error": "曲の終わりを超えて早送りすることはできません",
+			"reply": "👍 %sまで早送りしました"
+		},
+		"loop-queue": {
+			"description": "キュー全体のループの切り替え",
+			"idle-error": "ループする曲がありません！",
+			"queue-size-error": "キューをループするには曲が足りません！",
+			"reply-on": "ループします‹‹\\(´ω` )/››",
+			"reply-off": "ループしません(ﾟДﾟ)"
+		},
+		"loop": {
+			"description": "1曲ループの切り替え",
+			"error": "ループする曲がありません！",
+			"reply-on": "ループします‹‹\\(´ω` )/››",
+			"reply-off": "ループしません(ﾟДﾟ)"
+		},
+		"move": {
+			"description": "キュー内で曲を移動する",
+			"options": {
+				"from-description": "移動元",
+				"to-description": "移動先"
+			},
+			"position-error": "位置は1以上を指定してください",
+			"reply": "{{title}}を{{position}}番目に移動しました"
+		},
+		"next": {
+			"description": "次の曲へ"
+		},
+		"nowplaying": {
+			"description": "再生中の曲を表示",
+			"error": "何も再生されていません！"
+		},
+		"pause": {
+			"description": "一時停止",
+			"error": "何も再生していません！",
+			"reply": "一休み。"
+		},
+		"play": {
+			"description": "曲を再生",
+			"options": {
+				"queue-description": "YouTubeのURL、または検索語句",
+				"queue-description-with-thirdparty": "YouTubeまたはSpotifyのURL、または検索語句"
+			}
+		},
+		"queue": {
+			"description": "キューの一覧を表示",
+			"options": {
+				"page-description": "表示するページ(デフォルトは1)",
+				"page-size-description": "1ページに表示する件数(最大は30)"
+			}
+		},
+		"remove": {
+			"description": "キューから曲を削除",
+			"options": {
+				"position-description": "削除する曲の位置（デフォルトは1）",
+				"range-description": "削除する曲の件数（デフォルトは1）"
+			},
+			"position-error": "位置は1以上を指定してください",
+			"range-error": "件数は1以上を指定してください",
+			"reply": ":wastebasket: ポイッ"
+		},
+		"replay": {
+			"description": "現在の曲をリプレイ",
+			"no-play-error": "何も再生されていません！",
+			"live-error": "ライブではリプレイできません",
+			"reply": "👍 リプレイします"
+		},
+		"resume": {
+			"description": "再生を再開",
+			"playing-error": "既に曲を再生しています",
+			"no-play-error": "何も再生されていません！",
+			"reply": "再開。"
+		},
+		"seek": {
+			"description": "曲の最初から早送りする",
+			"no-play-error": "何も再生していません！",
+			"live-error": "ライブでは早送りできません",
+			"seek-length-error": "曲の終わりを超えて早送りすることはできません",
+			"reply": "👍 %sまで早送りしました"
+		},
+		"shuffle": {
+			"description": "キューをシャッフルします",
+			"queue-size-error": "シャッフルするには曲が足りません",
+			"reply": "シャッフルしました"
+		},
+		"skip": {
+			"description": "曲をスキップ",
+			"options": {
+				"number-description": "スキップする曲数（デフォルトは1）"
+			},
+			"number-error": "曲数は1以上を指定してください",
+			"reply-error": "スキップできませんでした",
+			"reply": "スキップしました"
+		},
+		"stop": {
+			"description": "再生を停止し、切断し、キューをクリアします",
+			"no-connected-error": "接続されていません",
+			"no-play-error": "何も再生していません",
+			"reply": "さよなら……"
+		},
+		"unskip": {
+			"description": "1曲元に戻す",
+			"reply-error": "戻すべきものはもうない",
+			"reply": "戻ってきた！"
+		},
+		"volume": {
+			"description": "音量を設定する",
+			"no-play-error": "何も再生していません！",
+			"reply": "音量を%sに設定しました"
+		}
 	}
 }

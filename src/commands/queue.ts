@@ -6,19 +6,21 @@ import PlayerManager from '../managers/player.js';
 import Command from './index.js';
 import {buildQueueEmbed} from '../utils/build-embed.js';
 import {getGuildSettings} from '../utils/get-guild-settings.js';
+import i18n from 'i18n';
 
 @injectable()
 export default class implements Command {
   public readonly slashCommand = new SlashCommandBuilder()
     .setName('queue')
-    .setDescription('show the current queue')
+    .setDescription(i18n.__('commands.queue.description'))
     .addIntegerOption(option => option
       .setName('page')
-      .setDescription('page of queue to show [default: 1]')
+      .setDescription(i18n.__('commands.queue.options.page-description'))
       .setRequired(false))
     .addIntegerOption(option => option
       .setName('page-size')
-      .setDescription('how many items to display per page [default: 10, max: 30]')
+      // NOTE: 英語だとデフォルトが10であると表記してるけどデフォルト調整する設定があるのでこれは書かないほうが良いと思う
+      .setDescription(i18n.__('commands.queue.options.page-size-description'))
       .setMinValue(1)
       .setMaxValue(30)
       .setRequired(false));

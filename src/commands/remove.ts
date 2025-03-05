@@ -4,20 +4,21 @@ import {TYPES} from '../types.js';
 import PlayerManager from '../managers/player.js';
 import Command from './index.js';
 import {SlashCommandBuilder} from '@discordjs/builders';
+import i18n from 'i18n';
 
 @injectable()
 export default class implements Command {
   public readonly slashCommand = new SlashCommandBuilder()
     .setName('remove')
-    .setDescription('remove songs from the queue')
+    .setDescription(i18n.__('commands.remove.description'))
     .addIntegerOption(option =>
       option.setName('position')
-        .setDescription('position of the song to remove [default: 1]')
+        .setDescription(i18n.__('commands.remove.options.position-description'))
         .setRequired(false),
     )
     .addIntegerOption(option =>
       option.setName('range')
-        .setDescription('number of songs to remove [default: 1]')
+        .setDescription(i18n.__('commands.remove.options.range-description'))
         .setRequired(false));
 
   private readonly playerManager: PlayerManager;
@@ -33,15 +34,15 @@ export default class implements Command {
     const range = interaction.options.getInteger('range') ?? 1;
 
     if (position < 1) {
-      throw new Error('position must be at least 1');
+      throw new Error(i18n.__('commands.remove.position-error'));
     }
 
     if (range < 1) {
-      throw new Error('range must be at least 1');
+      throw new Error(i18n.__('commands.remove.range-error'));
     }
 
     player.removeFromQueue(position, range);
 
-    await interaction.reply(':wastebasket: removed');
+    await interaction.reply(i18n.__('commands.remove.reply'));
   }
 }

@@ -5,12 +5,13 @@ import {inject, injectable} from 'inversify';
 import PlayerManager from '../managers/player.js';
 import {STATUS} from '../services/player.js';
 import Command from './index.js';
+import i18n from 'i18n';
 
 @injectable()
 export default class implements Command {
   public readonly slashCommand = new SlashCommandBuilder()
     .setName('stop')
-    .setDescription('stop playback, disconnect, and clear all songs in the queue');
+    .setDescription(i18n.__('commands.stop.description'));
 
   public requiresVC = true;
 
@@ -24,14 +25,14 @@ export default class implements Command {
     const player = this.playerManager.get(interaction.guild!.id);
 
     if (!player.voiceConnection) {
-      throw new Error('not connected');
+      throw new Error(i18n.__('commands.stop.no-connected-error'));
     }
 
     if (player.status !== STATUS.PLAYING) {
-      throw new Error('not currently playing');
+      throw new Error(i18n.__('commands.stop.no-play-error'));
     }
 
     player.stop();
-    await interaction.reply('u betcha, stopped');
+    await interaction.reply(i18n.__('commands.stop.reply'));
   }
 }

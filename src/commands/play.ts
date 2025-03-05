@@ -10,6 +10,7 @@ import getYouTubeAndSpotifySuggestionsFor from '../utils/get-youtube-and-spotify
 import KeyValueCacheProvider from '../services/key-value-cache.js';
 import {ONE_HOUR_IN_SECONDS} from '../utils/constants.js';
 import AddQueryToQueue from '../services/add-query-to-queue.js';
+import i18n from 'i18n';
 
 @injectable()
 export default class implements Command {
@@ -27,12 +28,12 @@ export default class implements Command {
     this.addQueryToQueue = addQueryToQueue;
 
     const queryDescription = thirdParty === undefined
-      ? 'YouTube URL or search query'
-      : 'YouTube URL, Spotify URL, or search query';
+      ? i18n.__('commands.play.options.queue-description')
+      : i18n.__('commands.play.options.queue-description-with-thirdparty');
 
     this.slashCommand = new SlashCommandBuilder()
       .setName('play')
-      .setDescription('play a song')
+      .setDescription(i18n.__('commands.play.description'))
       .addStringOption(option => option
         .setName('query')
         .setDescription(queryDescription)
@@ -40,16 +41,16 @@ export default class implements Command {
         .setRequired(true))
       .addBooleanOption(option => option
         .setName('immediate')
-        .setDescription('add track to the front of the queue'))
+        .setDescription(i18n.__('common.immediate-description')))
       .addBooleanOption(option => option
         .setName('shuffle')
-        .setDescription('shuffle the input if you\'re adding multiple tracks'))
+        .setDescription(i18n.__('common.shuffle-description')))
       .addBooleanOption(option => option
         .setName('split')
-        .setDescription('if a track has chapters, split it'))
+        .setDescription(i18n.__('common.split-description')))
       .addBooleanOption(option => option
         .setName('skip')
-        .setDescription('skip the currently playing track'));
+        .setDescription(i18n.__('common.skip-description')));
   }
 
   public async execute(interaction: ChatInputCommandInteraction): Promise<void> {

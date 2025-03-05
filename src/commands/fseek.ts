@@ -15,7 +15,7 @@ export default class implements Command {
     .setDescription(i18n.__('commands.fseek.description'))
     .addStringOption(option => option
       .setName('time')
-      .setDescription(i18n.__('commands.fseek.options.time-description'))
+      .setDescription(i18n.__('common.time-description'))
       .setRequired(true));
 
   public requiresVC = true;

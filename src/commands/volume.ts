@@ -4,15 +4,16 @@ import {inject, injectable} from 'inversify';
 import PlayerManager from '../managers/player.js';
 import Command from './index.js';
 import {SlashCommandBuilder} from '@discordjs/builders';
+import i18n from 'i18n';
 
 @injectable()
 export default class implements Command {
   public readonly slashCommand = new SlashCommandBuilder()
     .setName('volume')
-    .setDescription('set current player volume level')
+    .setDescription(i18n.__('commands.volume.description'))
     .addIntegerOption(option =>
       option.setName('level')
-        .setDescription('volume percentage (0 is muted, 100 is max & default)')
+        .setDescription(i18n.__('common.volume-description'))
         .setMinValue(0)
         .setMaxValue(100)
         .setRequired(true),
@@ -32,11 +33,11 @@ export default class implements Command {
     const currentSong = player.getCurrent();
 
     if (!currentSong) {
-      throw new Error('nothing is playing');
+      throw new Error(i18n.__('commands.volume.no-play-error'));
     }
 
     const level = interaction.options.getInteger('level') ?? 100;
     player.setVolume(level);
-    await interaction.reply(`Set volume to ${level}%`);
+    await interaction.reply(i18n.__('commands.volume.reply', String(level)));
   }
 }
