@@ -13,6 +13,7 @@ import {SponsorBlock} from 'sponsorblock-api';
 import Config from './config.js';
 import KeyValueCacheProvider from './key-value-cache.js';
 import {ONE_HOUR_IN_SECONDS} from '../utils/constants.js';
+import i18n from 'i18n';
 
 @injectable()
 export default class AddQueryToQueue {
@@ -62,7 +63,7 @@ export default class AddQueryToQueue {
     let [newSongs, extraMsg] = await this.getSongs.getSongs(query, playlistLimit, shouldSplitChapters);
 
     if (newSongs.length === 0) {
-      throw new Error('no songs found');
+      throw new Error(i18n.__('services.add-query-to-queue.no-song-error'));
     }
 
     if (shuffleAdditions) {
@@ -92,7 +93,7 @@ export default class AddQueryToQueue {
       await player.play();
 
       if (wasPlayingSong) {
-        statusMsg = 'resuming playback';
+        statusMsg = i18n.__('services.add-query-to-queue.queue-resume-play');
       }
 
       await interaction.editReply({
@@ -107,7 +108,7 @@ export default class AddQueryToQueue {
       try {
         await player.forward(1);
       } catch (_: unknown) {
-        throw new Error('no song to skip to');
+        throw new Error(i18n.__('services.add-query-to-queue.no-skip-error'));
       }
     }
 
@@ -125,9 +126,19 @@ export default class AddQueryToQueue {
     }
 
     if (newSongs.length === 1) {
-      await interaction.editReply(`u betcha, **${firstSong.title}** added to the${addToFrontOfQueue ? ' front of the' : ''} queue${skipCurrentTrack ? 'and current track skipped' : ''}${extraMsg}`);
+      await interaction.editReply(i18n.__('services.add-query-to-queue.add-song-message.main-single', {
+        title: firstSong.title,
+        front: addToFrontOfQueue ? i18n.__('services.add-query-to-queue.add-song-message.front') : '',
+        skip: skipCurrentTrack ? i18n.__('services.add-query-to-queue.add-song-message.skip') : '',
+        msg: extraMsg
+      }));
     } else {
-      await interaction.editReply(`u betcha, **${firstSong.title}** and ${newSongs.length - 1} other songs were added to the queue${skipCurrentTrack ? 'and current track skipped' : ''}${extraMsg}`);
+      await interaction.editReply(i18n.__('services.add-query-to-queue.add-song-message.main-multi', {
+        title: firstSong.title,
+        count: String(newSongs.length -1),
+        skip: skipCurrentTrack ? i18n.__('services.add-query-to-queue.add-song-message.skip') : '',
+        msg: extraMsg
+      }));
     }
   }
 
